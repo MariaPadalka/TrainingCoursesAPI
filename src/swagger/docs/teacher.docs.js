@@ -119,50 +119,6 @@
  *         description: Client error. Failed to update teacher.
  *       '404':
  *         description: Teacher not found.
- *   patch:
- *     summary: Partially update a teacher by ID
- *     tags: [Teachers]
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *         description: ID of the teacher to update
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               firstName:
- *                 type: string
- *                 description: Updated first name of the teacher
- *               lastName:
- *                 type: string
- *                 description: Updated last name of the teacher
- *               patronymic:
- *                 type: string
- *                 description: Updated patronymic of the teacher
- *               phone:
- *                 type: string
- *                 description: Updated phone number of the teacher
- *               experience:
- *                 type: number
- *                 description: Updated experience in years of the teacher
- *               subjects:
- *                 type: array
- *                 items:
- *                   type: string
- *                   description: Updated list of subject IDs taught by the teacher
- *     responses:
- *       '200':
- *         description: Successful request. Returns the updated teacher.
- *       '400':
- *         description: Client error. Failed to update teacher.
- *       '404':
- *         description: Teacher not found.
  *   delete:
  *     summary: Delete a teacher by ID
  *     tags: [Teachers]

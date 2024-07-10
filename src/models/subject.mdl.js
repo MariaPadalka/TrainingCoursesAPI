@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const hourlyRateSchema = new mongoose.Schema(
   {
@@ -13,5 +13,5 @@ const subjectSchema = new mongoose.Schema({
   hourlyRate: { type: hourlyRateSchema, required: true },
 });
 
-const Subject = mongoose.model("Subject", subjectSchema);
+const Subject = mongoose.model('Subject', subjectSchema);
 export default Subject;
