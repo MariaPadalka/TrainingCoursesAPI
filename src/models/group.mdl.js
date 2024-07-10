@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const groupSchema = new mongoose.Schema({
   specialty: { type: String, required: true },
@@ -8,5 +8,5 @@ const groupSchema = new mongoose.Schema({
 
 groupSchema.index({ specialty: 1, department: 1 }, { unique: true });
 
-const Group = mongoose.model("Group", groupSchema);
+const Group = mongoose.model('Group', groupSchema);
 export default Group;

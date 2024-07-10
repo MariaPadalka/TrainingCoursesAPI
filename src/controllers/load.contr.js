@@ -1,12 +1,12 @@
-import Load from "../models/load.mdl.js";
+import Load from '../models/load.mdl.js';
 
 // Отримати всі навантаження
 export const getAllLoads = async (req, res) => {
   try {
     const loads = await Load.find()
-      .populate("teacherID")
-      .populate("groupID")
-      .populate("subjectID");
+      .populate('teacherID')
+      .populate('groupID')
+      .populate('subjectID');
     res.json(loads);
   } catch (err) {
     res.status(500).json({ message: err.message });

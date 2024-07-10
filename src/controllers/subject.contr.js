@@ -1,4 +1,4 @@
-import Subject from "../models/subject.mdl.js";
+import Subject from '../models/subject.mdl.js';
 
 // Отримати всі предмети
 export const getAllSubjects = async (req, res) => {
