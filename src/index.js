@@ -4,10 +4,11 @@ import swaggerSpec from './swagger/swagger.js';
 import applyMiddleware from './middleware/index.mddl.js';
 import dotenv from 'dotenv';
 
-import connectDB from './db.js'; // Import the DB connection function
+import connectDB from './db.js';
 import routes from './routes/index.rt.js';
-import { errorHandler } from './middleware/errorHandler.middl.js';
-import startServer from './startServer.js';
+import { errorHandler } from './middleware/errorHandler.mddl.js';
+import startServer from './server.js';
+import CustomError from './utils/errors/customError.class.js';
 
 dotenv.config();
 
@@ -20,6 +21,14 @@ app.use('/api', routes);
 
 // Add Swagger UI
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+app.all('*', (req, res, next) => {
+    const err = new CustomError(
+        `Can't find method ${req.method} ${req.originalUrl} on the server!`,
+        404
+    );
+    next(err);
+});
 
 // Error handler
 app.use(errorHandler);
