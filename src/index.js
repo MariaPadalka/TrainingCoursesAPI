@@ -9,6 +9,7 @@ import routes from './routes/index.rt.js';
 import { errorHandler } from './middleware/errorHandler.mddl.js';
 import startServer from './server.js';
 import CustomError from './utils/errors/customError.class.js';
+import logMiddleware from './middleware/log.mddl.js';
 
 dotenv.config();
 
@@ -16,6 +17,8 @@ const app = express();
 applyMiddleware(app);
 
 connectDB();
+
+app.use(logMiddleware);
 
 app.use('/api', routes);
 

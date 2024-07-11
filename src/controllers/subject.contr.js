@@ -1,6 +1,6 @@
 import Subject from '../models/subject.mdl.js';
 import asyncErrorHandler from '../utils/errors/asyncError.handler.js';
-import { SUCCESS_MESSAGES } from '../utils/errors/messages.js';
+import { SUCCESS_MESSAGES } from '../utils/errors/messages.constants.js';
 
 export const getAllSubjects = asyncErrorHandler(async (req, res) => {
     const subjects = await Subject.find();
