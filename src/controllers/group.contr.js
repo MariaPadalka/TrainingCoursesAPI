@@ -1,6 +1,9 @@
 import Group from '../models/group.mdl.js';
 import asyncErrorHandler from '../utils/errors/asyncError.handler.js';
-import { ERROR_MESSAGES, SUCCESS_MESSAGES } from '../utils/errors/messages.js';
+import {
+    ERROR_MESSAGES,
+    SUCCESS_MESSAGES,
+} from '../utils/errors/messages.constants.js';
 
 export const getAllGroups = asyncErrorHandler(async (req, res) => {
     const groups = await Group.find();

@@ -4,7 +4,10 @@ import Subject from '../models/subject.mdl.js';
 import Teacher from '../models/teacher.mdl.js';
 import asyncErrorHandler from '../utils/errors/asyncError.handler.js';
 import CustomError from '../utils/errors/customError.class.js';
-import { ERROR_MESSAGES, SUCCESS_MESSAGES } from '../utils/errors/messages.js';
+import {
+    ERROR_MESSAGES,
+    SUCCESS_MESSAGES,
+} from '../utils/errors/messages.constants.js';
 
 const checkReferences = async (teacherId, groupId, subjectId) => {
     const teacher = await Teacher.findById(teacherId);

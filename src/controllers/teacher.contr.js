@@ -3,7 +3,10 @@ import Subject from '../models/subject.mdl.js';
 import asyncErrorHandler from '../utils/errors/asyncError.handler.js';
 import CustomError from '../utils/errors/customError.class.js';
 import mongoose from 'mongoose';
-import { ERROR_MESSAGES, SUCCESS_MESSAGES } from '../utils/errors/messages.js';
+import {
+    ERROR_MESSAGES,
+    SUCCESS_MESSAGES,
+} from '../utils/errors/messages.constants.js';
 
 const subjectsValid = async (subjects) => {
     if (!subjects || subjects.length === 0) return true;
