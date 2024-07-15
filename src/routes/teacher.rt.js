@@ -1,20 +1,15 @@
 import express from 'express';
-import {
-    getAllTeachers,
-    getTeacherById,
-    createTeacher,
-    putTeacher,
-    patchTeacher,
-    deleteTeacher,
-} from '../controllers/teacher.contr.js';
+import teeacherController from '../controllers/teacher.contr.js';
+import { checkRole } from '../middleware/jwt.mddl.js';
+import { ROLES } from '../utils/constants/roles.constants.js';
 
 const router = express.Router();
 
-router.get('/', getAllTeachers);
-router.post('/', createTeacher);
-router.get('/:id', getTeacherById);
-router.put('/:id', putTeacher);
-router.patch('/:id', patchTeacher);
-router.delete('/:id', deleteTeacher);
+router.get('/', checkRole(ROLES.ADMIN), teeacherController.getAllTeachers);
+router.post('/', checkRole(ROLES.ADMIN), teeacherController.createTeacher);
+router.get('/:id', teeacherController.getTeacherById); //in controller
+router.put('/:id', checkRole(ROLES.ADMIN), teeacherController.putTeacher);
+router.patch('/:id', checkRole(ROLES.ADMIN), teeacherController.patchTeacher);
+router.delete('/:id', checkRole(ROLES.ADMIN), teeacherController.deleteTeacher);
 
 export default router;

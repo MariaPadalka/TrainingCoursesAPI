@@ -18,6 +18,11 @@ const teacherSchema = new mongoose.Schema({
     },
     experience: { type: Number, min: 0, required: true },
     subjects: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Subject' }],
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
+    },
 });
 
 teacherSchema.set('toJSON', {

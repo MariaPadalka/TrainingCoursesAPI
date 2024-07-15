@@ -21,6 +21,10 @@ paths:
                         type: array
                         items:
                             $ref: '#/definitions/Load'
+                401:
+                    description: Unauthorized - Token missing
+                403:
+                    description: Forbidden - Invalid refresh token
                 500:
                     description: Server error. Failed to retrieve loads.
 
@@ -42,6 +46,10 @@ paths:
                         $ref: '#/definitions/Load'
                 400:
                     description: Bad request. Validation error.
+                401:
+                    description: Unauthorized - Token missing
+                403:
+                    description: Forbidden - Invalid refresh token
                 500:
                     description: Server error. Failed to add load.
 
@@ -61,6 +69,10 @@ paths:
                     description: Successful request. Returns the specified load.
                     schema:
                         $ref: '#/definitions/Load'
+                401:
+                    description: Unauthorized - Token missing
+                403:
+                    description: Forbidden - Invalid refresh token
                 404:
                     description: Load not found.
                 500:
@@ -90,6 +102,10 @@ paths:
                         $ref: '#/definitions/Load'
                 400:
                     description: Client error. Failed to update load.
+                401:
+                    description: Unauthorized - Token missing
+                403:
+                    description: Forbidden - Invalid refresh token
                 404:
                     description: Load not found.
 
@@ -117,6 +133,10 @@ paths:
                         $ref: '#/definitions/Load'
                 400:
                     description: Client error. Failed to update load.
+                401:
+                    description: Unauthorized - Token missing
+                403:
+                    description: Forbidden - Invalid refresh token
                 404:
                     description: Load not found.
         delete:
@@ -132,6 +152,10 @@ paths:
             responses:
                 200:
                     description: Successful request. Load deleted.
+                401:
+                    description: Unauthorized - Token missing
+                403:
+                    description: Forbidden - Invalid refresh token
                 404:
                     description: Load not found.
                 500:

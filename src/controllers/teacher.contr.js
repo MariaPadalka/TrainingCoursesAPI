@@ -1,119 +1,44 @@
-import Teacher from '../models/teacher.mdl.js';
-import Subject from '../models/subject.mdl.js';
-import asyncErrorHandler from '../utils/errors/asyncError.handler.js';
-import CustomError from '../utils/errors/customError.class.js';
-import mongoose from 'mongoose';
-import {
-    ERROR_MESSAGES,
-    SUCCESS_MESSAGES,
-} from '../utils/errors/messages.constants.js';
+import asyncErrorHandler from '../utils/asyncError.handler.js';
+import teacherService from '../services/teacher.sv.js';
 
-const subjectsValid = async (subjects) => {
-    if (!subjects || subjects.length === 0) return true;
-
-    const validObjectIds = subjects.every((subject) =>
-        mongoose.Types.ObjectId.isValid(subject)
-    );
-    if (!validObjectIds) return false;
-
-    const validSubjectsCount = await Subject.countDocuments({
-        _id: { $in: subjects },
+class TeeacherController {
+    getAllTeachers = asyncErrorHandler(async (_, res) => {
+        res.json(await teacherService.getAllTeachers());
     });
-    return validSubjectsCount === subjects.length;
-};
 
-export const getAllTeachers = asyncErrorHandler(async (req, res) => {
-    const teachers = await Teacher.find().populate('subjects');
-    res.json(teachers);
-});
+    createTeacher = asyncErrorHandler(async (req, res) => {
+        const objectToCreate = req.body;
 
-export const createTeacher = asyncErrorHandler(async (req, res, next) => {
-    const { firstName, lastName, patronymic, phone, experience, subjects } =
-        req.body;
-
-    const isValid = await subjectsValid(subjects);
-    if (!isValid) {
-        const error = new CustomError(ERROR_MESSAGES.SUBJECT_IDS_INVALID, 400);
-        return next(error);
-    }
-
-    const teacher = new Teacher({
-        firstName,
-        lastName,
-        patronymic,
-        phone,
-        experience,
-        subjects,
+        res.status(201).json(
+            await teacherService.createTeacher(objectToCreate)
+        );
     });
-    const newTeacher = await teacher.save();
-    res.status(201).json(newTeacher);
-});
 
-export const getTeacherById = asyncErrorHandler(async (req, res, next) => {
-    const teacher = await Teacher.findById(req.params.id).populate('subjects');
-    if (!teacher) {
-        const error = new CustomError(ERROR_MESSAGES.TEACHER_NOT_FOUND, 404);
-        return next(error);
-    }
-    res.json(teacher);
-});
+    getTeacherById = asyncErrorHandler(async (req, res) => {
+        const id = req.params.id;
 
-export const putTeacher = asyncErrorHandler(async (req, res, next) => {
-    const { firstName, lastName, patronymic, phone, experience, subjects } =
-        req.body;
+        res.json(await teacherService.getTeacherById(id));
+    });
 
-    const isValid = await subjectsValid(subjects);
-    if (!isValid) {
-        const error = new CustomError(ERROR_MESSAGES.SUBJECT_IDS_INVALID, 400);
-        return next(error);
-    }
+    putTeacher = asyncErrorHandler(async (req, res) => {
+        const updateObject = req.body;
+        const id = req.params.id;
 
-    const updatedTeacher = await Teacher.findByIdAndUpdate(
-        req.params.id,
-        { firstName, lastName, patronymic, phone, experience, subjects },
-        { runValidators: true, new: true }
-    );
-    if (!updatedTeacher) {
-        const error = new CustomError(ERROR_MESSAGES.TEACHER_NOT_FOUND, 404);
-        return next(error);
-    }
-    res.json(updatedTeacher);
-});
+        res.json(await teacherService.putTeacher(id, updateObject));
+    });
 
-export const patchTeacher = asyncErrorHandler(async (req, res, next) => {
-    const updateObject = req.body;
-    const id = req.params.id;
+    patchTeacher = asyncErrorHandler(async (req, res) => {
+        const updateObject = req.body;
+        const id = req.params.id;
 
-    if (updateObject.subjects) {
-        const isValid = await subjectsValid(updateObject.subjects);
-        if (!isValid) {
-            const error = new CustomError(
-                ERROR_MESSAGES.SUBJECT_IDS_INVALID,
-                400
-            );
-            return next(error);
-        }
-    }
+        res.json(await teacherService.patchTeacher(id, updateObject));
+    });
 
-    const updatedTeacher = await Teacher.findByIdAndUpdate(
-        id,
-        { $set: updateObject },
-        { new: true }
-    );
+    deleteTeacher = asyncErrorHandler(async (req, res) => {
+        const id = req.params.id;
 
-    if (!updatedTeacher) {
-        const error = new CustomError(ERROR_MESSAGES.TEACHER_NOT_FOUND, 404);
-        return next(error);
-    }
+        res.json(await teacherService.deleteTeacher(id));
+    });
+}
 
-    res.json(updatedTeacher);
-});
-
-export const deleteTeacher = asyncErrorHandler(async (req, res, next) => {
-    const deletedTeacher = await Teacher.findByIdAndDelete(req.params.id);
-    if (!deletedTeacher) {
-        const error = new CustomError(ERROR_MESSAGES.TEACHER_NOT_FOUND, 404);
-        return next(error);
-    }
-    res.json({ message: SUCCESS_MESSAGES.TEACHER_DELETED });
-});
+export default new TeeacherController();

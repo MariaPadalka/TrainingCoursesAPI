@@ -1,63 +1,44 @@
-import Subject from '../models/subject.mdl.js';
-import asyncErrorHandler from '../utils/errors/asyncError.handler.js';
-import { SUCCESS_MESSAGES } from '../utils/errors/messages.constants.js';
+import asyncErrorHandler from '../utils/asyncError.handler.js';
+import subjectService from '../services/subject.sv.js';
 
-export const getAllSubjects = asyncErrorHandler(async (req, res) => {
-    const subjects = await Subject.find();
-    res.json(subjects);
-});
+class SubjectController {
+    getAllSubjects = asyncErrorHandler(async (req, res) => {
+        res.json(await subjectService.getAllSubjects());
+    });
 
-export const createSubject = asyncErrorHandler(async (req, res) => {
-    const { subjectName, hourlyRate } = req.body;
+    createSubject = asyncErrorHandler(async (req, res) => {
+        const objectToCreate = req.body;
 
-    const subject = new Subject({ subjectName, hourlyRate });
-    const newSubject = await subject.save();
-    res.status(201).json(newSubject);
-});
+        res.status(201).json(
+            await subjectService.createSubject(objectToCreate)
+        );
+    });
 
-export const getSubjectById = asyncErrorHandler(async (req, res, next) => {
-    const subject = await Subject.findById(req.params.id);
-    if (!subject) {
-        const error = new CustomError(ERROR_MESSAGES.SUBJECT_NOT_FOUND, 404);
-        return next(error);
-    }
-    res.json(subject);
-});
+    getSubjectById = asyncErrorHandler(async (req, res) => {
+        const id = req.params.id;
 
-export const putSubject = asyncErrorHandler(async (req, res, next) => {
-    const { subjectName, hourlyRate } = req.body;
+        res.json(await subjectService.getSubjectById(id));
+    });
 
-    const updatedSubject = await Subject.findByIdAndUpdate(
-        req.params.id,
-        { subjectName, hourlyRate },
-        { runValidators: true, new: true }
-    );
-    if (!updatedSubject)
-        return next(new CustomError(ERROR_MESSAGES.SUBJECT_NOT_FOUND, 404));
+    putSubject = asyncErrorHandler(async (req, res) => {
+        const objectToUpdate = req.body;
+        const id = req.params.id;
 
-    res.json(updatedSubject);
-});
+        res.json(await subjectService.putSubject(id, objectToUpdate));
+    });
 
-export const patchSubject = asyncErrorHandler(async (req, res, next) => {
-    const updateObject = req.body;
-    const id = req.params.id;
+    patchSubject = asyncErrorHandler(async (req, res) => {
+        const updateObject = req.body;
+        const id = req.params.id;
 
-    const updatedSubject = await Subject.findByIdAndUpdate(
-        id,
-        { $set: updateObject },
-        { new: true }
-    );
+        res.json(await subjectService.patchSubject(id, updateObject));
+    });
 
-    if (!updatedSubject)
-        return next(new CustomError(ERROR_MESSAGES.SUBJECT_NOT_FOUND, 404));
+    deleteSubject = asyncErrorHandler(async (req, res) => {
+        const id = req.params.id;
 
-    res.json(updatedSubject);
-});
+        res.json(await subjectService.deleteSubject(id));
+    });
+}
 
-export const deleteSubject = asyncErrorHandler(async (req, res, next) => {
-    const subject = await Subject.findByIdAndDelete(req.params.id);
-    if (!subject)
-        return next(new CustomError(ERROR_MESSAGES.SUBJECT_NOT_FOUND, 404));
-
-    res.json({ message: SUCCESS_MESSAGES.SUBJECT_DELETED });
-});
+export default new SubjectController();

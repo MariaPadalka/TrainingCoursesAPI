@@ -8,8 +8,9 @@ import connectDB from './db.js';
 import routes from './routes/index.rt.js';
 import { errorHandler } from './middleware/errorHandler.mddl.js';
 import startServer from './server.js';
-import CustomError from './utils/errors/customError.class.js';
+import CustomError from './utils/customError.class.js';
 import logMiddleware from './middleware/log.mddl.js';
+import cookieParser from 'cookie-parser';
 
 dotenv.config();
 
@@ -19,6 +20,7 @@ applyMiddleware(app);
 connectDB();
 
 app.use(logMiddleware);
+app.use(cookieParser());
 
 app.use('/api', routes);
 

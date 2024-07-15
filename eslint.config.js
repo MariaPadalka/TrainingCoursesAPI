@@ -6,7 +6,7 @@ export default [
         rules: {
             'no-unused-vars': 'warn',
             'no-undef': 'off',
-            indent: ['error', 4, { SwitchCase: 2 }],
+            indent: ['error', 4, { SwitchCase: 1 }],
             'linebreak-style': ['error', 'windows'],
             quotes: ['warn', 'single', { avoidEscape: true }],
             semi: ['error', 'always'],

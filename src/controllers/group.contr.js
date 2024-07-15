@@ -1,64 +1,41 @@
-import Group from '../models/group.mdl.js';
-import asyncErrorHandler from '../utils/errors/asyncError.handler.js';
-import {
-    ERROR_MESSAGES,
-    SUCCESS_MESSAGES,
-} from '../utils/errors/messages.constants.js';
+import asyncErrorHandler from '../utils/asyncError.handler.js';
+import groupService from '../services/group.sv.js';
 
-export const getAllGroups = asyncErrorHandler(async (req, res) => {
-    const groups = await Group.find();
-    res.json(groups);
-});
+class GroupController {
+    getAllGroups = asyncErrorHandler(async (req, res) => {
+        res.json(await groupService.getAllGroups());
+    });
 
-export const createGroup = asyncErrorHandler(async (req, res) => {
-    const { specialty, department, studentCount } = req.body;
+    createGroup = asyncErrorHandler(async (req, res) => {
+        const objectToCreate = req.body;
 
-    const group = new Group({ specialty, department, studentCount });
-    const newGroup = await group.save();
-    res.status(201).json(newGroup);
-});
+        res.status(201).json(await groupService.createGroup(objectToCreate));
+    });
 
-export const getGroupById = asyncErrorHandler(async (req, res, next) => {
-    const group = await Group.findById(req.params.id);
-    if (!group)
-        return next(new CustomError(ERROR_MESSAGES.GROUP_NOT_FOUND, 404));
-    res.json(group);
-});
+    getGroupById = asyncErrorHandler(async (req, res) => {
+        const id = req.params.id;
 
-export const putGroup = asyncErrorHandler(async (req, res, next) => {
-    const { specialty, department, studentCount } = req.body;
+        res.json(await groupService.getGroupById(id));
+    });
 
-    const updatedGroup = await Group.findByIdAndUpdate(
-        req.params.id,
-        { specialty, department, studentCount },
-        { runValidators: true, new: true }
-    );
-    if (!updatedGroup)
-        return next(new CustomError(ERROR_MESSAGES.GROUP_NOT_FOUND, 404));
+    putGroup = asyncErrorHandler(async (req, res) => {
+        const objectToUpdate = req.body;
+        const id = req.params.id;
 
-    res.json(updatedGroup);
-});
+        res.json(await groupService.putGroup(id, objectToUpdate));
+    });
 
-export const patchGroup = asyncErrorHandler(async (req, res, next) => {
-    const updateObject = req.body;
-    const id = req.params.id;
+    patchGroup = asyncErrorHandler(async (req, res) => {
+        const updateObject = req.body;
+        const id = req.params.id;
 
-    const updatedGroup = await Group.findByIdAndUpdate(
-        id,
-        { $set: updateObject },
-        { new: true }
-    );
+        res.json(await groupService.patchGroup(id, updateObject));
+    });
 
-    if (!updatedGroup)
-        return next(new CustomError(ERROR_MESSAGES.GROUP_NOT_FOUND, 404));
+    deleteGroup = asyncErrorHandler(async (req, res) => {
+        const id = req.params.id;
+        res.json(await groupService.deleteGroup(id));
+    });
+}
 
-    res.json(updatedGroup);
-});
-
-export const deleteGroup = asyncErrorHandler(async (req, res, next) => {
-    const group = await Group.findByIdAndDelete(req.params.id);
-    if (!group)
-        return next(new CustomError(ERROR_MESSAGES.GROUP_NOT_FOUND, 404));
-
-    res.json({ message: SUCCESS_MESSAGES.GROUP_DELETED });
-});
+export default new GroupController();

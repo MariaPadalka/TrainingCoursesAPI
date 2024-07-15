@@ -1,20 +1,15 @@
 import express from 'express';
-import {
-    getAllSubjects,
-    createSubject,
-    getSubjectById,
-    putSubject,
-    patchSubject,
-    deleteSubject,
-} from '../controllers/subject.contr.js';
+import subjectController from '../controllers/subject.contr.js';
+import { checkRole } from '../middleware/jwt.mddl.js';
+import { ROLES } from '../utils/constants/roles.constants.js';
 
 const router = express.Router();
 
-router.get('/', getAllSubjects);
-router.post('/', createSubject);
-router.get('/:id', getSubjectById);
-router.put('/:id', putSubject);
-router.patch('/:id', patchSubject);
-router.delete('/:id', deleteSubject);
+router.get('/', subjectController.getAllSubjects);
+router.post('/', checkRole(ROLES.ADMIN), subjectController.createSubject);
+router.get('/:id', subjectController.getSubjectById);
+router.put('/:id', checkRole(ROLES.ADMIN), subjectController.putSubject);
+router.patch('/:id', checkRole(ROLES.ADMIN), subjectController.patchSubject);
+router.delete('/:id', checkRole(ROLES.ADMIN), subjectController.deleteSubject);
 
 export default router;

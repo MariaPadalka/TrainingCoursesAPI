@@ -1,0 +1,64 @@
+swagger: '2.0'
+info:
+    title: User API
+    description: API for managing users
+    version: 1.0.0
+basePath: /api
+tags:
+    - name: Users
+      description: Operations related to users
+securityDefinitions:
+    BearerAuth:
+        type: apiKey
+        name: Authorization
+        in: header
+paths:
+    /users:
+        get:
+            summary: Get all users
+            tags: [Users]
+            security:
+                - BearerAuth: []
+            responses:
+                '200':
+                    description: A list of all users
+                '403':
+                    description: Forbidden - Only admins can access this endpoint
+    /users/{id}:
+        delete:
+            summary: Delete a user by ID
+            tags: [Users]
+            parameters:
+                - in: path
+                  name: id
+                  required: true
+                  schema:
+                      type: string
+                  description: ID of the user to delete
+            security:
+                - BearerAuth: []
+            responses:
+                '200':
+                    description: User deleted successfully
+                '403':
+                    description: Forbidden - Only admins can delete users
+                '404':
+                    description: Not Found - User not found
+definitions:
+    schemas:
+        User:
+            type: object
+            properties:
+                id:
+                    type: string
+                    example: 60d0fe4f5311236168a109ca
+                email:
+                    type: string
+                    example: user@example.com
+                role:
+                    type: string
+                    enum: [admin, teacher]
+                    example: teacher
+                refrshToken:
+                    type: string
+                    exampe: 'sdfsd7823khsgdf3mnbsdmfhgsiu2386jhsdf'
