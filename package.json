@@ -17,12 +17,18 @@
     "license": "ISC",
     "description": "",
     "dependencies": {
+        "bcrypt": "^5.1.1",
+        "bcryptjs": "^2.4.3",
         "body-parser": "^1.20.2",
+        "cookie-parser": "^1.4.6",
         "dotenv": "^16.4.5",
         "express": "^4.19.2",
         "express-winston": "^4.2.0",
+        "jsonwebtoken": "^9.0.2",
         "mongodb": "^6.8.0",
         "mongoose": "^8.4.5",
+        "nodemailer": "^6.9.14",
+        "validate": "^5.2.0",
         "winston": "^3.13.1"
     },
     "devDependencies": {

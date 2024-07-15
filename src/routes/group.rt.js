@@ -1,20 +1,15 @@
 import express from 'express';
-import {
-    getAllGroups,
-    createGroup,
-    getGroupById,
-    putGroup,
-    patchGroup,
-    deleteGroup,
-} from '../controllers/group.contr.js';
+import groupController from '../controllers/group.contr.js';
+import { checkRole } from '../middleware/jwt.mddl.js';
+import { ROLES } from '../utils/constants/roles.constants.js';
 
 const router = express.Router();
 
-router.get('/', getAllGroups);
-router.post('/', createGroup);
-router.get('/:id', getGroupById);
-router.put('/:id', putGroup);
-router.patch('/:id', patchGroup);
-router.delete('/:id', deleteGroup);
+router.get('/', groupController.getAllGroups);
+router.post('/', checkRole(ROLES.ADMIN), groupController.createGroup);
+router.get('/:id', groupController.getGroupById);
+router.put('/:id', checkRole(ROLES.ADMIN), groupController.putGroup);
+router.patch('/:id', checkRole(ROLES.ADMIN), groupController.patchGroup);
+router.delete('/:id', checkRole(ROLES.ADMIN), groupController.deleteGroup);
 
 export default router;

@@ -33,6 +33,10 @@ paths:
                     description: Successful request. Adds a teacher.
                 '400':
                     description: Bad request. Validation error.
+                '401':
+                    description: Unauthorized - Token missing
+                '403':
+                    description: Forbidden - Invalid refresh token
                 '500':
                     description: Server error. Failed to add teacher.
     /teachers/{id}:
@@ -50,6 +54,10 @@ paths:
             responses:
                 '200':
                     description: Successful request. Returns the specified teacher.
+                '401':
+                    description: Unauthorized - Token missing
+                '403':
+                    description: Forbidden - Invalid refresh token
                 '404':
                     description: Teacher not found.
                 '500':
@@ -76,6 +84,10 @@ paths:
                     description: Successful request. Returns the updated teacher.
                 '400':
                     description: Client error. Failed to update teacher.
+                '401':
+                    description: Unauthorized - Token missing
+                '403':
+                    description: Forbidden - Invalid refresh token
                 '404':
                     description: Teacher not found.
         patch:
@@ -100,6 +112,10 @@ paths:
                     description: Successful request. Returns the updated teacher.
                 '400':
                     description: Client error. Failed to update teacher.
+                '401':
+                    description: Unauthorized - Token missing
+                '403':
+                    description: Forbidden - Invalid refresh token
                 '404':
                     description: Teacher not found.
         delete:
@@ -116,6 +132,10 @@ paths:
             responses:
                 '200':
                     description: Successful request. Teacher deleted.
+                '401':
+                    description: Unauthorized - Token missing
+                '403':
+                    description: Forbidden - Invalid refresh token
                 '404':
                     description: Teacher not found.
                 '500':
@@ -144,10 +164,17 @@ definitions:
                 items:
                     type: string
                     description: List of subject IDs
+            email:
+                type: string
+                description: Teacher's email
         required:
             - lastName
             - firstName
+            - patronymic
             - phone
+            - email
+            - subjects
+            - experience
 
     Teacher:
         allOf:

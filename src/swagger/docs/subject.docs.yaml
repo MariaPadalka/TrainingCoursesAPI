@@ -32,6 +32,10 @@ paths:
                     description: Successful request. Adds a subject.
                 '400':
                     description: Bad request. Validation error.
+                '401':
+                    description: Unauthorized - Token missing
+                '403':
+                    description: Forbidden - Invalid refresh token
                 '500':
                     description: Server error. Failed to add subject.
 
@@ -49,6 +53,10 @@ paths:
             responses:
                 '200':
                     description: Successful request. Returns the specified subject.
+                '401':
+                    description: Unauthorized - Token missing
+                '403':
+                    description: Forbidden - Invalid refresh token
                 '404':
                     description: Subject not found.
                 '500':
@@ -75,6 +83,10 @@ paths:
                     description: Successful request. Returns the updated subject.
                 '400':
                     description: Client error. Failed to update subject.
+                '401':
+                    description: Unauthorized - Token missing
+                '403':
+                    description: Forbidden - Invalid refresh token
                 '404':
                     description: Subject not found.
 
@@ -99,6 +111,10 @@ paths:
                     description: Successful request. Returns the updated subject.
                 '400':
                     description: Client error. Failed to update subject.
+                '401':
+                    description: Unauthorized - Token missing
+                '403':
+                    description: Forbidden - Invalid refresh token
                 '404':
                     description: Subject not found.
 
@@ -115,6 +131,10 @@ paths:
             responses:
                 '200':
                     description: Successful request. Subject deleted.
+                '401':
+                    description: Unauthorized - Token missing
+                '403':
+                    description: Forbidden - Invalid refresh token
                 '404':
                     description: Subject not found.
                 '500':

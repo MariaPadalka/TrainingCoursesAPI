@@ -24,6 +24,20 @@ const swaggerOptions = {
                 description: 'Local server',
             },
         ],
+        components: {
+            securitySchemes: {
+                BearerAuth: {
+                    type: 'http',
+                    scheme: 'bearer',
+                    bearerFormat: 'JWT',
+                },
+            },
+        },
+        security: [
+            {
+                BearerAuth: [],
+            },
+        ],
     },
     apis: [join(__dirname, 'docs/*.js'), join(__dirname, 'docs/*.yaml')],
 };

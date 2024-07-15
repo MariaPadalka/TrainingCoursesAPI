@@ -1,0 +1,163 @@
+openapi: 3.0.0
+info:
+    title: Auth API
+    version: 1.0.0
+    description: API for user authentication and authorization
+paths:
+    /auth/register:
+        post:
+            summary: Register a new user
+            tags:
+                - Auth
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                email:
+                                    type: string
+                                    example: user@example.com
+                                role:
+                                    type: string
+                                    enum: [admin, teacher]
+                                    example: teacher
+            responses:
+                '201':
+                    description: User registered successfully. A refresh token is set in an HTTP-only cookie.
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    user:
+                                        $ref: '#/definitions/User'
+                                    accessToken:
+                                        type: string
+                '400':
+                    description: Bad Request
+                '409':
+                    description: Conflict - Email already exists
+
+    /auth/login:
+        post:
+            summary: Login user
+            tags:
+                - Auth
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                email:
+                                    type: string
+                                    example: user@example.com
+                                password:
+                                    type: string
+                                    example: yourpassword
+            responses:
+                '200':
+                    description: User logged in successfully. A refresh token is set in an HTTP-only cookie.
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    user:
+                                        $ref: '#/definitions/User'
+                                    accessToken:
+                                        type: string
+                '401':
+                    description: Unauthorized - Invalid credentials
+
+    /auth/logout:
+        post:
+            summary: Logout user
+            tags:
+                - Auth
+            responses:
+                '200':
+                    description: User logged out successfully. The refresh token cookie is cleared.
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    message:
+                                        type: string
+                                        example: Logged out successfully
+                '403':
+                    description: Forbidden - Invalid refresh token
+
+    /auth/refresh:
+        post:
+            summary: Refresh access token
+            tags:
+                - Auth
+            responses:
+                '200':
+                    description: Tokens refreshed successfully. A new refresh token is set in an HTTP-only cookie.
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    accessToken:
+                                        type: string
+                '401':
+                    description: Unauthorized - Token missing
+                '403':
+                    description: Forbidden - Invalid refresh token
+
+    /auth/change-password:
+        post:
+            summary: Change user's password
+            tags:
+                - Auth
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                oldPassword:
+                                    type: string
+                                    example: oldpassword
+                                newPassword:
+                                    type: string
+                                    example: newpassword
+            responses:
+                '200':
+                    description: Password changed successfully
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    message:
+                                        type: string
+                                        example: Password changed successfully
+                                    user:
+                                        $ref: '#/definitions/User'
+                '401':
+                    description: Unauthorized - Invalid old password
+                '404':
+                    description: Not Found - User not found
+definitions:
+    User:
+        type: object
+        properties:
+            email:
+                type: string
+                example: user@example.com
+            role:
+                type: string
+                enum: [admin, teacher]
+                example: teacher
+            refreshToken:
+                type: string
+                example: your_refresh_token
