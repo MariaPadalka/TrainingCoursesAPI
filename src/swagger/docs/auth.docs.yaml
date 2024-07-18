@@ -33,8 +33,6 @@ paths:
                                 properties:
                                     user:
                                         $ref: '#/definitions/User'
-                                    accessToken:
-                                        type: string
                 '400':
                     description: Bad Request
                 '409':

@@ -2,8 +2,9 @@ import asyncErrorHandler from '../utils/asyncError.handler.js';
 import teacherService from '../services/teacher.sv.js';
 
 class TeeacherController {
-    getAllTeachers = asyncErrorHandler(async (_, res) => {
-        res.json(await teacherService.getAllTeachers());
+    getAllTeachers = asyncErrorHandler(async (req, res) => {
+        const filters = req.query; // Отримання query parameters з запиту
+        res.json(await teacherService.getAllTeachers(filters));
     });
 
     createTeacher = asyncErrorHandler(async (req, res) => {
@@ -12,6 +13,11 @@ class TeeacherController {
         res.status(201).json(
             await teacherService.createTeacher(objectToCreate)
         );
+    });
+
+    getTeacherByToken = asyncErrorHandler(async (req, res) => {
+        const userId = req.user.userId;
+        res.json(await teacherService.getTeacherByUserId(userId));
     });
 
     getTeacherById = asyncErrorHandler(async (req, res) => {

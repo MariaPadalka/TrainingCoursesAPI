@@ -14,6 +14,28 @@ paths:
             summary: Retrieve all loads
             tags:
                 - Loads
+            parameters:
+                - name: teacher
+                  in: query
+                  description: ID of the teacher to filter loads
+                  required: false
+                  type: string
+
+                - name: subject
+                  in: query
+                  description: ID of the subject to filter loads
+                  required: false
+                  type: string
+                - name: group
+                  in: query
+                  description: ID of the group to filter loads
+                  required: false
+                  type: string
+                - name: lessonType
+                  in: query
+                  description: Type of the lesson to filter loads (e.g., практика or лекція)
+                  required: false
+                  type: string
             responses:
                 200:
                     description: Successful request. Returns a list of loads.

@@ -4,6 +4,7 @@ import tokenService from './token.sv.js';
 import CustomError from '../utils/customError.class.js';
 import { ERROR_MESSAGES } from '../utils/constants/messages.constants.js';
 import { validatePassword } from '../utils/validation.func.js';
+import { userToDto } from '../dto/user.dto.js';
 
 class AuthService {
     async registerUser(email, role) {
@@ -17,19 +18,11 @@ class AuthService {
             refreshToken: 'temporaryToken',
         });
 
-        await user.validate();
-        // Generate tokens
-        const accessToken = tokenService.generateAccessToken(user);
-        const refreshToken = tokenService.generateRefreshToken(user);
-
-        // Update user's refresh token
-        user.refreshToken = refreshToken;
         await user.save();
 
         return {
-            user: user,
+            user,
             generatedPassword: password,
-            accessToken,
         };
     }
 
@@ -51,13 +44,13 @@ class AuthService {
         await user.save();
 
         return {
-            user: user,
+            user: userToDto(user),
             accessToken,
         };
     }
     async logoutUser(refreshToken) {
         const user = await tokenService.removeToken(refreshToken);
-        return user;
+        return userToDto(user);
     }
 
     async refreshTokens(refreshToken) {
@@ -101,7 +94,7 @@ class AuthService {
         user.password = await bcrypt.hash(newPassword, 10);
         await user.save();
 
-        return user;
+        return userToDto(user);
     }
 }
 

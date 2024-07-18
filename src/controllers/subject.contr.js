@@ -14,6 +14,11 @@ class SubjectController {
         );
     });
 
+    getTeacherSubjects = asyncErrorHandler(async (req, res) => {
+        const userId = req.user.userId;
+        res.json(await subjectService.getTeacherSubjects(userId));
+    });
+
     getSubjectById = asyncErrorHandler(async (req, res) => {
         const id = req.params.id;
 

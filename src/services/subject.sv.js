@@ -4,6 +4,7 @@ import {
     SUCCESS_MESSAGES,
 } from '../utils/constants/messages.constants.js';
 import CustomError from '../utils/customError.class.js';
+import teacherService from './teacher.sv.js';
 
 class SubjectService {
     getAllSubjects = async () => {
@@ -14,6 +15,10 @@ class SubjectService {
         const { subjectName, hourlyRate } = objectToCreate;
         const subject = new Subject({ subjectName, hourlyRate });
         return await subject.save();
+    };
+
+    getTeacherSubjects = async (userId) => {
+        return await teacherService.getTeacherByUserId(userId)?.subjects;
     };
 
     getSubjectById = async (id) => {

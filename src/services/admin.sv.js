@@ -5,13 +5,15 @@ import {
     SUCCESS_MESSAGES,
 } from '../utils/constants/messages.constants.js';
 import { ROLES } from '../utils/constants/roles.constants.js';
+import { userToDto } from '../dto/user.dto.js';
 
-class UserService {
-    async getAllUsers() {
-        return await User.find();
+class AdminService {
+    async getAllAdmins() {
+        const users = await User.find({ role: ROLES.ADMIN });
+        return users.map(userToDto);
     }
 
-    async deleteUser(id) {
+    async deleteAdmin(id) {
         const user = await User.findById(id);
         if (!user) {
             throw new CustomError(ERROR_MESSAGES.USER_NOT_FOUND, 404);
@@ -25,4 +27,4 @@ class UserService {
     }
 }
 
-export default new UserService();
+export default new AdminService();

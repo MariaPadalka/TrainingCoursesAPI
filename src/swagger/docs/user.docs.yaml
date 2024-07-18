@@ -1,33 +1,33 @@
 swagger: '2.0'
 info:
     title: User API
-    description: API for managing users
+    description: API for managing admins
     version: 1.0.0
 basePath: /api
 tags:
-    - name: Users
-      description: Operations related to users
+    - name: Admins
+      description: Operations related to admins
 securityDefinitions:
     BearerAuth:
         type: apiKey
         name: Authorization
         in: header
 paths:
-    /users:
+    /admins:
         get:
-            summary: Get all users
-            tags: [Users]
+            summary: Get all admins
+            tags: [Admins]
             security:
                 - BearerAuth: []
             responses:
                 '200':
-                    description: A list of all users
+                    description: A list of all admins
                 '403':
                     description: Forbidden - Only admins can access this endpoint
-    /users/{id}:
+    /admins/{id}:
         delete:
             summary: Delete a user by ID
-            tags: [Users]
+            tags: [Admins]
             parameters:
                 - in: path
                   name: id
@@ -41,7 +41,7 @@ paths:
                 '200':
                     description: User deleted successfully
                 '403':
-                    description: Forbidden - Only admins can delete users
+                    description: Forbidden - Only admins can delete admins
                 '404':
                     description: Not Found - User not found
 definitions:

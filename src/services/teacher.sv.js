@@ -9,18 +9,26 @@ import authService from '../services/auth.sv.js';
 import mailService from '../services/mail.sv.js';
 import { ROLES } from '../utils/constants/roles.constants.js';
 import { subjectsValid } from '../utils/validation.func.js';
+import { convertedFilters } from '../utils/helperFunctions.js';
 
 class TeacherService {
-    getAllTeachers = async () => {
-        const teachers = await Teacher.find()
+    getAllTeachers = async (filters) => {
+        const teachers = await Teacher.find(convertedFilters(filters))
             .populate('subjects')
             .populate('user');
         return teachers;
     };
 
     createTeacher = async (objectToCreate) => {
-        const { firstName, lastName, patronymic, phone, experience, subjects } =
-            objectToCreate;
+        const {
+            firstName,
+            lastName,
+            patronymic,
+            phone,
+            experience,
+            subjects,
+            email,
+        } = objectToCreate;
 
         const isValid = await subjectsValid(subjects);
         if (!isValid)
@@ -35,10 +43,13 @@ class TeacherService {
             subjects,
             user: new mongoose.Types.ObjectId(),
         });
+
         await teacher.validate();
 
-        const { user, generatedPassword, accessToken } =
-            await authService.registerUser(email, ROLES.TEACHER);
+        const { user, generatedPassword } = await authService.registerUser(
+            email,
+            ROLES.TEACHER
+        );
 
         teacher.user = user._id;
         await teacher.save();
@@ -46,9 +57,22 @@ class TeacherService {
         await mailService.sendPasswordMail(user.email, generatedPassword);
 
         return {
-            teacher: teacher,
-            accessToken: accessToken,
+            teacher: { ...teacher, email },
         };
+    };
+
+    getTeacherByUserId = async (userId) => {
+        const teachers = await this.getAllTeachers({ user: userId });
+
+        if (teachers.length > 0) {
+            return teachers[0];
+        } else {
+            const error = new CustomError(
+                ERROR_MESSAGES.TEACHER_NOT_FOUND,
+                404
+            );
+            throw error;
+        }
     };
 
     getTeacherById = async (id) => {

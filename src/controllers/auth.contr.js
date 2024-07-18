@@ -7,6 +7,7 @@ import {
     SUCCESS_MESSAGES,
 } from '../utils/constants/messages.constants.js';
 import CustomError from '../utils/customError.class.js';
+import { userToDto } from '../dto/user.dto.js';
 
 const refreshTokenMaxAge = getMillisecondsFromExpiration(
     process.env.REFRESH_TOKEN_EXPIRATION
@@ -16,20 +17,16 @@ class AuthController {
     registerUser = asyncErrorHandler(async (req, res) => {
         const { email, role } = req.body;
 
-        const { user, generatedPassword, accessToken } =
-            await authService.registerUser(email, role);
+        const { user, generatedPassword } = await authService.registerUser(
+            email,
+            role
+        );
 
         // Send the email with the password
         await mailService.sendPasswordMail(user.email, generatedPassword);
 
-        res.cookie('refreshToken', user.refreshToken, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            maxAge: refreshTokenMaxAge,
-        });
         res.status(201).json({
-            user: user,
-            accessToken: accessToken,
+            user: userToDto(user),
         });
     });
 
@@ -45,7 +42,7 @@ class AuthController {
         });
 
         res.status(200).json({
-            user: user,
+            role: user.role,
             accessToken: accessToken,
         });
     });
