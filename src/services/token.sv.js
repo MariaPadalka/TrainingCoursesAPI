@@ -40,7 +40,7 @@ class TokenService {
     async findToken(refreshToken) {
         const user = await User.findOne({ refreshToken });
         if (!user) {
-            throw new CustomError(ERROR_MESSAGES.INVALID_REFRESH_TOKEN, 403);
+            throw new CustomError(ERROR_MESSAGES.INVALID_REFRESH_TOKEN, 401);
         }
         return user;
     }
@@ -52,7 +52,7 @@ class TokenService {
             { new: true }
         );
         if (!user) {
-            throw new CustomError(ERROR_MESSAGES.INVALID_REFRESH_TOKEN, 403);
+            throw new CustomError(ERROR_MESSAGES.INVALID_REFRESH_TOKEN, 401);
         }
         return user;
     }

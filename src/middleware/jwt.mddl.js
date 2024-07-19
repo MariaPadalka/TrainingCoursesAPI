@@ -16,7 +16,7 @@ export const authenticateToken = (req, res, next) => {
         req.user = decodedToken; // Додаємо розшифрований токен до запиту
         next();
     } catch {
-        return next(new CustomError(ERROR_MESSAGES.TOKEN_INVALID, 403));
+        return next(new CustomError(ERROR_MESSAGES.TOKEN_INVALID, 401));
     }
 };
 

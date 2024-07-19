@@ -51,7 +51,7 @@ class AuthController {
         const { refreshToken } = req.cookies;
 
         if (!refreshToken) {
-            throw new CustomError(ERROR_MESSAGES.INVALID_REFRESH_TOKEN, 403);
+            throw new CustomError(ERROR_MESSAGES.INVALID_REFRESH_TOKEN, 401);
         }
 
         await authService.logoutUser(refreshToken);

@@ -40,11 +40,10 @@ class AuthService {
         const accessToken = tokenService.generateAccessToken(user);
         const refreshToken = tokenService.generateRefreshToken(user);
 
-        user.refreshToken = refreshToken;
-        await user.save();
+        const savedUser = await tokenService.saveToken(user.id, refreshToken);
 
         return {
-            user: userToDto(user),
+            user: savedUser,
             accessToken,
         };
     }
@@ -56,7 +55,7 @@ class AuthService {
     async refreshTokens(refreshToken) {
         const user = await tokenService.findToken(refreshToken);
         if (!user) {
-            throw new CustomError(ERROR_MESSAGES.INVALID_REFRESH_TOKEN, 403);
+            throw new CustomError(ERROR_MESSAGES.INVALID_REFRESH_TOKEN, 401);
         }
 
         tokenService.verifyRefreshToken(refreshToken);
@@ -64,8 +63,7 @@ class AuthService {
         const newAccessToken = tokenService.generateAccessToken(user);
         const newRefreshToken = tokenService.generateRefreshToken(user);
 
-        user.refreshToken = newRefreshToken;
-        await user.save();
+        await tokenService.saveToken(user.id, newRefreshToken);
 
         return {
             accessToken: newAccessToken,
