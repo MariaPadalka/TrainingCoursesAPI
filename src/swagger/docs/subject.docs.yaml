@@ -139,7 +139,23 @@ paths:
                     description: Subject not found.
                 '500':
                     description: Server error. Failed to delete subject.
-
+    /subjects/current:
+        get:
+            summary: Retrieve subjects taught by the current teacher
+            tags: [Subjects]
+            responses:
+                '200':
+                    description: Successful request. Returns a list of subjects taught by the current teacher.
+                    schema:
+                        type: array
+                        items:
+                            $ref: '#/definitions/Subject'
+                '401':
+                    description: Unauthorized - Token missing
+                '403':
+                    description: Forbidden - Invalid refresh token
+                '500':
+                    description: Server error. Failed to retrieve subjects.
 definitions:
     SubjectInput:
         type: object

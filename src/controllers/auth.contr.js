@@ -1,6 +1,5 @@
 import asyncErrorHandler from '../utils/asyncError.handler.js';
 import authService from '../services/auth.sv.js';
-import mailService from '../services/mail.sv.js';
 import { getMillisecondsFromExpiration } from '../utils/helperFunctions.js';
 import {
     ERROR_MESSAGES,
@@ -13,26 +12,6 @@ const refreshTokenMaxAge = getMillisecondsFromExpiration(
 );
 
 class AuthController {
-    registerUser = asyncErrorHandler(async (req, res) => {
-        const { email, role } = req.body;
-
-        const { user, generatedPassword, accessToken } =
-            await authService.registerUser(email, role);
-
-        // Send the email with the password
-        await mailService.sendPasswordMail(user.email, generatedPassword);
-
-        res.cookie('refreshToken', user.refreshToken, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            maxAge: refreshTokenMaxAge,
-        });
-        res.status(201).json({
-            user: user,
-            accessToken: accessToken,
-        });
-    });
-
     loginUser = asyncErrorHandler(async (req, res) => {
         const { email, password } = req.body;
 
@@ -45,7 +24,7 @@ class AuthController {
         });
 
         res.status(200).json({
-            user: user,
+            role: user.role,
             accessToken: accessToken,
         });
     });
@@ -54,7 +33,7 @@ class AuthController {
         const { refreshToken } = req.cookies;
 
         if (!refreshToken) {
-            throw new CustomError(ERROR_MESSAGES.INVALID_REFRESH_TOKEN, 403);
+            throw new CustomError(ERROR_MESSAGES.INVALID_REFRESH_TOKEN, 401);
         }
 
         await authService.logoutUser(refreshToken);

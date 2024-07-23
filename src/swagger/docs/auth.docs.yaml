@@ -4,42 +4,6 @@ info:
     version: 1.0.0
     description: API for user authentication and authorization
 paths:
-    /auth/register:
-        post:
-            summary: Register a new user
-            tags:
-                - Auth
-            requestBody:
-                required: true
-                content:
-                    application/json:
-                        schema:
-                            type: object
-                            properties:
-                                email:
-                                    type: string
-                                    example: user@example.com
-                                role:
-                                    type: string
-                                    enum: [admin, teacher]
-                                    example: teacher
-            responses:
-                '201':
-                    description: User registered successfully. A refresh token is set in an HTTP-only cookie.
-                    content:
-                        application/json:
-                            schema:
-                                type: object
-                                properties:
-                                    user:
-                                        $ref: '#/definitions/User'
-                                    accessToken:
-                                        type: string
-                '400':
-                    description: Bad Request
-                '409':
-                    description: Conflict - Email already exists
-
     /auth/login:
         post:
             summary: Login user
@@ -66,8 +30,8 @@ paths:
                             schema:
                                 type: object
                                 properties:
-                                    user:
-                                        $ref: '#/definitions/User'
+                                    role:
+                                        type: string
                                     accessToken:
                                         type: string
                 '401':
@@ -158,6 +122,3 @@ definitions:
                 type: string
                 enum: [admin, teacher]
                 example: teacher
-            refreshToken:
-                type: string
-                example: your_refresh_token

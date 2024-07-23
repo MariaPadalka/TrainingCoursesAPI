@@ -10,7 +10,8 @@
         "lint": "eslint .",
         "lint:fix": "eslint --fix .",
         "prettier": "prettier --write .",
-        "prettier:check": "prettier --check ."
+        "prettier:check": "prettier --check .",
+        "seed": "node src/utils/database/seed.script.js"
     },
     "keywords": [],
     "author": "Mariia Padalka",
@@ -21,6 +22,7 @@
         "bcryptjs": "^2.4.3",
         "body-parser": "^1.20.2",
         "cookie-parser": "^1.4.6",
+        "cors": "^2.8.5",
         "dotenv": "^16.4.5",
         "express": "^4.19.2",
         "express-winston": "^4.2.0",

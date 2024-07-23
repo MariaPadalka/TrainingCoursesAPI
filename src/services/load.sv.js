@@ -5,14 +5,14 @@ import {
     SUCCESS_MESSAGES,
 } from '../utils/constants/messages.constants.js';
 import { checkReferences } from '../utils/validation.func.js';
+import { convertedFilters } from '../utils/helperFunctions.js';
 
 class LoadService {
-    getAllLoads = async () => {
-        const loads = await Load.find()
+    getAllLoads = async (filters) => {
+        return await Load.find(convertedFilters(filters))
             .populate('teacher')
             .populate('group')
             .populate('subject');
-        return loads;
     };
 
     createLoad = async (objectToCreate) => {
@@ -50,11 +50,15 @@ class LoadService {
             .populate('teacher')
             .populate('group')
             .populate('subject');
-        if (!load) {
-            const error = new CustomError(ERROR_MESSAGES.LOAD_NOT_FOUND, 404);
-            throw error;
-        }
         return load;
+    };
+
+    getTeacherLoads = async (teacherId) => {
+        const loads = await Load.find({ teacher: teacherId })
+            .populate('teacher')
+            .populate('group')
+            .populate('subject');
+        return loads;
     };
 
     putLoad = async (id, objectToUpdate) => {

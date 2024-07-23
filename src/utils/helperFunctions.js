@@ -1,3 +1,5 @@
+import mongoose from 'mongoose';
+
 export const getMillisecondsFromExpiration = (expiration) => {
     const match = expiration.match(/(\d+)([dh])/);
     if (!match) return null;
@@ -11,4 +13,25 @@ export const getMillisecondsFromExpiration = (expiration) => {
         default:
             return null;
     }
+};
+
+export const convertToObjectId = (value) => {
+    if (value instanceof mongoose.Types.ObjectId) return value;
+    return new mongoose.Types.ObjectId(`${value}`);
+};
+
+const validKeys = ['user', 'teacher', 'group', 'subject'];
+
+export const convertedFilters = (filters) => {
+    const converted = {};
+
+    for (const [key, value] of Object.entries(filters)) {
+        if (validKeys.includes(key) && value) {
+            converted[key] = convertToObjectId(value);
+        } else {
+            converted[key] = value;
+        }
+    }
+
+    return converted;
 };

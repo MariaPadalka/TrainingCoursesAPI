@@ -4,6 +4,7 @@ import tokenService from './token.sv.js';
 import CustomError from '../utils/customError.class.js';
 import { ERROR_MESSAGES } from '../utils/constants/messages.constants.js';
 import { validatePassword } from '../utils/validation.func.js';
+import { userToDto } from '../dto/user.dto.js';
 
 class AuthService {
     async registerUser(email, role) {
@@ -17,19 +18,11 @@ class AuthService {
             refreshToken: 'temporaryToken',
         });
 
-        await user.validate();
-        // Generate tokens
-        const accessToken = tokenService.generateAccessToken(user);
-        const refreshToken = tokenService.generateRefreshToken(user);
-
-        // Update user's refresh token
-        user.refreshToken = refreshToken;
         await user.save();
 
         return {
-            user: user,
+            user,
             generatedPassword: password,
-            accessToken,
         };
     }
 
@@ -47,23 +40,22 @@ class AuthService {
         const accessToken = tokenService.generateAccessToken(user);
         const refreshToken = tokenService.generateRefreshToken(user);
 
-        user.refreshToken = refreshToken;
-        await user.save();
+        const savedUser = await tokenService.saveToken(user.id, refreshToken);
 
         return {
-            user: user,
+            user: savedUser,
             accessToken,
         };
     }
     async logoutUser(refreshToken) {
         const user = await tokenService.removeToken(refreshToken);
-        return user;
+        return userToDto(user);
     }
 
     async refreshTokens(refreshToken) {
         const user = await tokenService.findToken(refreshToken);
         if (!user) {
-            throw new CustomError(ERROR_MESSAGES.INVALID_REFRESH_TOKEN, 403);
+            throw new CustomError(ERROR_MESSAGES.INVALID_REFRESH_TOKEN, 401);
         }
 
         tokenService.verifyRefreshToken(refreshToken);
@@ -71,8 +63,7 @@ class AuthService {
         const newAccessToken = tokenService.generateAccessToken(user);
         const newRefreshToken = tokenService.generateRefreshToken(user);
 
-        user.refreshToken = newRefreshToken;
-        await user.save();
+        await tokenService.saveToken(user.id, newRefreshToken);
 
         return {
             accessToken: newAccessToken,
@@ -101,7 +92,7 @@ class AuthService {
         user.password = await bcrypt.hash(newPassword, 10);
         await user.save();
 
-        return user;
+        return userToDto(user);
     }
 }
 

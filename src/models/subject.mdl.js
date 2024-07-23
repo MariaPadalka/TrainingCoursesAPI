@@ -21,5 +21,17 @@ subjectSchema.set('toJSON', {
     },
 });
 
+subjectSchema.pre('remove', async function (next) {
+    try {
+        await Teacher.updateMany(
+            { subjects: this._id },
+            { $pull: { subjects: this._id } }
+        );
+        next();
+    } catch (error) {
+        next(error);
+    }
+});
+
 const Subject = mongoose.model('Subject', subjectSchema);
 export default Subject;

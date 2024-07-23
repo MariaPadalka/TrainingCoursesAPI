@@ -14,6 +14,28 @@ paths:
             summary: Retrieve all loads
             tags:
                 - Loads
+            parameters:
+                - name: teacher
+                  in: query
+                  description: ID of the teacher to filter loads
+                  required: false
+                  type: string
+
+                - name: subject
+                  in: query
+                  description: ID of the subject to filter loads
+                  required: false
+                  type: string
+                - name: group
+                  in: query
+                  description: ID of the group to filter loads
+                  required: false
+                  type: string
+                - name: lessonType
+                  in: query
+                  description: Type of the lesson to filter loads (e.g., practice or lecture)
+                  required: false
+                  type: string
             responses:
                 200:
                     description: Successful request. Returns a list of loads.
@@ -160,7 +182,25 @@ paths:
                     description: Load not found.
                 500:
                     description: Server error. Failed to delete load.
-
+    /loads/current:
+        get:
+            summary: Retrieve all loads for current teacher
+            tags:
+                - Loads
+            description: Retrieve all loads associated with the teacher identified by the user ID from the request context.
+            responses:
+                200:
+                    description: Successful request. Returns a list of loads for the teacher.
+                    schema:
+                        type: array
+                        items:
+                            $ref: '#/definitions/Load'
+                401:
+                    description: Unauthorized - Token missing or invalid
+                403:
+                    description: Forbidden - Invalid refresh token
+                500:
+                    description: Server error. Failed to retrieve loads.
 definitions:
     LoadInput:
         type: object

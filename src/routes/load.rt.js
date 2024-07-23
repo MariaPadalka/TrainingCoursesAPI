@@ -5,9 +5,14 @@ import { ROLES } from '../utils/constants/roles.constants.js';
 
 const router = express.Router();
 
-router.get('/', loadController.getAllLoads); //contr
+router.get('/', checkRole(ROLES.ADMIN), loadController.getAllLoads);
 router.post('/', checkRole(ROLES.ADMIN), loadController.createLoad);
-router.get('/:id', loadController.getLoadById); //contr
+router.get(
+    '/current',
+    checkRole(ROLES.TEACHER),
+    loadController.getTeacherLoads
+);
+router.get('/:id', checkRole(ROLES.ADMIN), loadController.getLoadById);
 router.put('/:id', checkRole(ROLES.ADMIN), loadController.putLoad);
 router.patch('/:id', checkRole(ROLES.ADMIN), loadController.patchLoad);
 router.delete('/:id', checkRole(ROLES.ADMIN), loadController.deleteLoad);
