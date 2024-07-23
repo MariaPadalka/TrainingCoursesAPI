@@ -1,4 +1,6 @@
+import Load from '../models/load.mdl.js';
 import Subject from '../models/subject.mdl.js';
+import Teacher from '../models/teacher.mdl.js';
 import {
     ERROR_MESSAGES,
     SUCCESS_MESSAGES,
@@ -18,7 +20,8 @@ class SubjectService {
     };
 
     getTeacherSubjects = async (userId) => {
-        return await teacherService.getTeacherByUserId(userId)?.subjects;
+        const teacher = await teacherService.getTeacherByUserId(userId);
+        return teacher.subjects;
     };
 
     getSubjectById = async (id) => {
@@ -59,6 +62,11 @@ class SubjectService {
         const subject = await Subject.findByIdAndDelete(id);
         if (!subject)
             throw new CustomError(ERROR_MESSAGES.SUBJECT_NOT_FOUND, 404);
+        await Load.deleteMany({ subject: subject._id });
+        await Teacher.updateMany(
+            { subjects: subject._id },
+            { $pull: { subjects: subject._id } }
+        );
         return { message: SUCCESS_MESSAGES.SUBJECT_DELETED };
     };
 }

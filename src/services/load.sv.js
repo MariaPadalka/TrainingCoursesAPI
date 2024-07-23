@@ -45,9 +45,19 @@ class LoadService {
         return newLoad;
     };
 
-    getTeacherLoads = async (userId) => {
-        const loads = await this.getAllLoads({ user: userId });
+    getLoadById = async (id) => {
+        const load = await Load.findById(id)
+            .populate('teacher')
+            .populate('group')
+            .populate('subject');
+        return load;
+    };
 
+    getTeacherLoads = async (teacherId) => {
+        const loads = await Load.find({ teacher: teacherId })
+            .populate('teacher')
+            .populate('group')
+            .populate('subject');
         return loads;
     };
 

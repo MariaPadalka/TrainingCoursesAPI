@@ -16,17 +16,22 @@ export const getMillisecondsFromExpiration = (expiration) => {
 };
 
 export const convertToObjectId = (value) => {
-    return mongoose.Types.ObjectId.createFromHexString(value);
+    if (value instanceof mongoose.Types.ObjectId) return value;
+    return new mongoose.Types.ObjectId(`${value}`);
 };
 
 const validKeys = ['user', 'teacher', 'group', 'subject'];
 
 export const convertedFilters = (filters) => {
-    Object.keys(filters).reduce((acc, key) => {
-        if (validKeys.includes(key) && filters[key]) {
-            acc[key] = convertToObjectId(filters[key]);
+    const converted = {};
+
+    for (const [key, value] of Object.entries(filters)) {
+        if (validKeys.includes(key) && value) {
+            converted[key] = convertToObjectId(value);
         } else {
-            acc[key] = filters[key]; // Залишаємо значення без змін, якщо ключ не в списку validKeys
+            converted[key] = value;
         }
-    }, {});
+    }
+
+    return converted;
 };

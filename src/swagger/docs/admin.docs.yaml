@@ -1,6 +1,6 @@
 swagger: '2.0'
 info:
-    title: User API
+    title: Admin API
     description: API for managing admins
     version: 1.0.0
 basePath: /api
@@ -14,6 +14,37 @@ securityDefinitions:
         in: header
 paths:
     /admins:
+        post:
+            summary: Register a new admin
+            tags:
+                - Admins
+            security:
+                - BearerAuth: []
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                email:
+                                    type: string
+                                    example: user@example.com
+            responses:
+                '201':
+                    description: Admin registered successfully. A refresh token is set in an HTTP-only cookie.
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    user:
+                                        $ref: '#/definitions/User'
+                '400':
+                    description: Bad Request
+                '409':
+                    description: Conflict - Email already exists
+
         get:
             summary: Get all admins
             tags: [Admins]
@@ -26,7 +57,7 @@ paths:
                     description: Forbidden - Only admins can access this endpoint
     /admins/{id}:
         delete:
-            summary: Delete a user by ID
+            summary: Delete a admin by ID
             tags: [Admins]
             parameters:
                 - in: path
@@ -34,16 +65,16 @@ paths:
                   required: true
                   schema:
                       type: string
-                  description: ID of the user to delete
+                  description: ID of the admin to delete
             security:
                 - BearerAuth: []
             responses:
                 '200':
-                    description: User deleted successfully
+                    description: Admin deleted successfully
                 '403':
                     description: Forbidden - Only admins can delete admins
                 '404':
-                    description: Not Found - User not found
+                    description: Not Found - Admin not found
 definitions:
     schemas:
         User:
@@ -59,6 +90,3 @@ definitions:
                     type: string
                     enum: [admin, teacher]
                     example: teacher
-                refrshToken:
-                    type: string
-                    exampe: 'sdfsd7823khsgdf3mnbsdmfhgsiu2386jhsdf'

@@ -1,5 +1,6 @@
 import asyncErrorHandler from '../utils/asyncError.handler.js';
 import teacherService from '../services/teacher.sv.js';
+import { userToDto } from '../dto/user.dto.js';
 
 class TeeacherController {
     getAllTeachers = asyncErrorHandler(async (req, res) => {
@@ -17,7 +18,9 @@ class TeeacherController {
 
     getTeacherByToken = asyncErrorHandler(async (req, res) => {
         const userId = req.user.userId;
-        res.json(await teacherService.getTeacherByUserId(userId));
+        const teacher = await teacherService.getTeacherByUserId(userId);
+        teacher.user = userToDto(teacher.user);
+        res.json(teacher);
     });
 
     getTeacherById = asyncErrorHandler(async (req, res) => {

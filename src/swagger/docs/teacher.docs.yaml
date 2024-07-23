@@ -140,6 +140,22 @@ paths:
                     description: Teacher not found.
                 '500':
                     description: Server error. Failed to delete teacher.
+    /teachers/current:
+        get:
+            summary: Retrieve the teacher details of the currently authenticated user
+            tags:
+                - Teachers
+            responses:
+                '200':
+                    description: Successful request. Returns the details of the currently authenticated teacher.
+                    schema:
+                        $ref: '#/definitions/Teacher'
+                '401':
+                    description: Unauthorized - Token missing
+                '403':
+                    description: Forbidden - Invalid refresh token
+                '500':
+                    description: Server error. Failed to retrieve teacher details.
 definitions:
     TeacherInput:
         type: object

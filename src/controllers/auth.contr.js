@@ -1,35 +1,17 @@
 import asyncErrorHandler from '../utils/asyncError.handler.js';
 import authService from '../services/auth.sv.js';
-import mailService from '../services/mail.sv.js';
 import { getMillisecondsFromExpiration } from '../utils/helperFunctions.js';
 import {
     ERROR_MESSAGES,
     SUCCESS_MESSAGES,
 } from '../utils/constants/messages.constants.js';
 import CustomError from '../utils/customError.class.js';
-import { userToDto } from '../dto/user.dto.js';
 
 const refreshTokenMaxAge = getMillisecondsFromExpiration(
     process.env.REFRESH_TOKEN_EXPIRATION
 );
 
 class AuthController {
-    registerUser = asyncErrorHandler(async (req, res) => {
-        const { email, role } = req.body;
-
-        const { user, generatedPassword } = await authService.registerUser(
-            email,
-            role
-        );
-
-        // Send the email with the password
-        await mailService.sendPasswordMail(user.email, generatedPassword);
-
-        res.status(201).json({
-            user: userToDto(user),
-        });
-    });
-
     loginUser = asyncErrorHandler(async (req, res) => {
         const { email, password } = req.body;
 

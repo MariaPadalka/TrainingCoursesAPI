@@ -11,6 +11,7 @@ export const ERROR_MESSAGES = {
     TOKEN_INVALID: 'Token is invalid or expired',
     FORBIDDEN: 'You do not have the necessary permissions',
 
+    TAKEN_EMAIL: 'This email is already taken',
     USER_NOT_FOUND: 'User not found',
     INVALID_CREDENTIALS: 'Invalid email or password',
     TEACHER_NOT_FOUND: 'Teacher not found',

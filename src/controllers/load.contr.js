@@ -1,5 +1,6 @@
 import asyncErrorHandler from '../utils/asyncError.handler.js';
 import loadService from '../services/load.sv.js';
+import teacherService from '../services/teacher.sv.js';
 
 class LoadController {
     getAllLoads = asyncErrorHandler(async (req, res) => {
@@ -15,7 +16,9 @@ class LoadController {
 
     getTeacherLoads = asyncErrorHandler(async (req, res) => {
         const userId = req.user.userId;
-        res.json(await loadService.getTeacherLoads(userId));
+        const teacher = await teacherService.getTeacherByUserId(userId);
+
+        res.json(await loadService.getTeacherLoads(teacher._id));
     });
 
     getLoadById = asyncErrorHandler(async (req, res) => {

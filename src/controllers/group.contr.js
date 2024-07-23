@@ -2,7 +2,7 @@ import asyncErrorHandler from '../utils/asyncError.handler.js';
 import groupService from '../services/group.sv.js';
 
 class GroupController {
-    getAllGroups = asyncErrorHandler(async (req, res) => {
+    getAllGroups = asyncErrorHandler(async (_, res) => {
         res.json(await groupService.getAllGroups());
     });
 

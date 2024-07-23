@@ -1,4 +1,5 @@
 import Group from '../models/group.mdl.js';
+import Load from '../models/load.mdl.js';
 import {
     ERROR_MESSAGES,
     SUCCESS_MESSAGES,
@@ -51,6 +52,8 @@ class GroupService {
     deleteGroup = async (id) => {
         const group = await Group.findByIdAndDelete(id);
         if (!group) throw new CustomError(ERROR_MESSAGES.GROUP_NOT_FOUND, 404);
+
+        await Load.deleteMany({ group: group._id });
 
         return { message: SUCCESS_MESSAGES.GROUP_DELETED };
     };

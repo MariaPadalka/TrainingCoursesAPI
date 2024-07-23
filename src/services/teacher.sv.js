@@ -10,13 +10,20 @@ import mailService from '../services/mail.sv.js';
 import { ROLES } from '../utils/constants/roles.constants.js';
 import { subjectsValid } from '../utils/validation.func.js';
 import { convertedFilters } from '../utils/helperFunctions.js';
+import User from '../models/user.mdl.js';
+import Load from '../models/load.mdl.js';
+import { userToDto } from '../dto/user.dto.js';
 
 class TeacherService {
     getAllTeachers = async (filters) => {
         const teachers = await Teacher.find(convertedFilters(filters))
             .populate('subjects')
             .populate('user');
-        return teachers;
+        let teachersDto = teachers.map((teacher) => {
+            teacher.user = userToDto(teacher.user);
+            return teacher;
+        });
+        return teachersDto;
     };
 
     createTeacher = async (objectToCreate) => {
@@ -52,13 +59,10 @@ class TeacherService {
         );
 
         teacher.user = user._id;
-        await teacher.save();
         // Send the email with the password
         await mailService.sendPasswordMail(user.email, generatedPassword);
 
-        return {
-            teacher: { ...teacher, email },
-        };
+        return await teacher.save();
     };
 
     getTeacherByUserId = async (userId) => {
@@ -86,7 +90,10 @@ class TeacherService {
             );
             throw error;
         }
-        return teacher;
+        let teacherDto = teacher;
+        teacherDto.user = userToDto(teacher.user);
+
+        return teacherDto;
     };
 
     putTeacher = async (id, putObject) => {
@@ -151,16 +158,30 @@ class TeacherService {
             throw new CustomError(ERROR_MESSAGES.TEACHER_NOT_FOUND, 404);
         }
 
-        await authService.deleteUser(teacher.user);
+        await this.deleteUser(teacher.user);
 
         // Видаляємо вчителя
         const deletedTeacher = await Teacher.findByIdAndDelete(teacher._id);
-
         if (!deletedTeacher) {
             throw new CustomError(ERROR_MESSAGES.TEACHER_NOT_FOUND, 404);
         }
+        await Load.deleteMany({ teacher: deletedTeacher._id });
+
         return { message: SUCCESS_MESSAGES.TEACHER_DELETED };
     };
+
+    async deleteUser(id) {
+        const user = await User.findById(id);
+        if (!user) {
+            throw new CustomError(ERROR_MESSAGES.USER_NOT_FOUND, 404);
+        }
+        if (user.role !== ROLES.TEACHER) {
+            throw new CustomError(ERROR_MESSAGES.FORBIDDEN, 404);
+        }
+        await User.findByIdAndDelete(id);
+
+        return { message: SUCCESS_MESSAGES.USER_DELETED };
+    }
 }
 
 export default new TeacherService();
