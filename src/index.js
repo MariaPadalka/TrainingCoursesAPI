@@ -4,7 +4,7 @@ import swaggerSpec from './swagger/swagger.js';
 import applyMiddleware from './middleware/index.mddl.js';
 import dotenv from 'dotenv';
 
-import connectDB from './db.js';
+import connectDB from '../src/utils/database/db.js';
 import routes from './routes/index.rt.js';
 import { errorHandler } from './middleware/errorHandler.mddl.js';
 import startServer from './server.js';

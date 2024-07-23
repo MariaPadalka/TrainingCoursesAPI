@@ -10,7 +10,8 @@
         "lint": "eslint .",
         "lint:fix": "eslint --fix .",
         "prettier": "prettier --write .",
-        "prettier:check": "prettier --check ."
+        "prettier:check": "prettier --check .",
+        "seed": "node src/utils/database/seed.script.js"
     },
     "keywords": [],
     "author": "Mariia Padalka",
