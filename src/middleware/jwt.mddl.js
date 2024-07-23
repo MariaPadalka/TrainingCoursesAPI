@@ -2,7 +2,6 @@ import tokenService from '../services/token.sv.js';
 import CustomError from '../utils/customError.class.js';
 import { ERROR_MESSAGES } from '../utils/constants/messages.constants.js';
 
-// Middleware для перевірки JWT токена
 export const authenticateToken = (req, res, next) => {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
@@ -13,7 +12,7 @@ export const authenticateToken = (req, res, next) => {
 
     try {
         const decodedToken = tokenService.verifyAccessToken(token);
-        req.user = decodedToken; // Додаємо розшифрований токен до запиту
+        req.user = decodedToken;
         next();
     } catch {
         return next(new CustomError(ERROR_MESSAGES.TOKEN_INVALID, 401));

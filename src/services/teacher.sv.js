@@ -160,7 +160,6 @@ class TeacherService {
 
         await this.deleteUser(teacher.user);
 
-        // Видаляємо вчителя
         const deletedTeacher = await Teacher.findByIdAndDelete(teacher._id);
         if (!deletedTeacher) {
             throw new CustomError(ERROR_MESSAGES.TEACHER_NOT_FOUND, 404);
