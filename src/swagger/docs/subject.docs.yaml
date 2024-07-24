@@ -1,0 +1,193 @@
+swagger: '2.0'
+info:
+    title: Subjects API
+    description: API documentation for managing subjects
+    version: 1.0.0
+basePath: /api
+tags:
+    - name: Subjects
+      description: Operations related to subjects
+paths:
+    /subjects:
+        get:
+            summary: Retrieve all subjects
+            tags: [Subjects]
+            responses:
+                '200':
+                    description: Successful request. Returns a list of subjects.
+                '500':
+                    description: Server error. Failed to retrieve subjects.
+
+        post:
+            summary: Add a subject
+            tags: [Subjects]
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/definitions/SubjectInput'
+            responses:
+                '201':
+                    description: Successful request. Adds a subject.
+                '400':
+                    description: Bad request. Validation error.
+                '401':
+                    description: Unauthorized - Token missing
+                '403':
+                    description: Forbidden - Invalid refresh token
+                '500':
+                    description: Server error. Failed to add subject.
+
+    /subjects/{id}:
+        get:
+            summary: Retrieve a subject by ID
+            tags: [Subjects]
+            parameters:
+                - in: path
+                  name: id
+                  required: true
+                  schema:
+                      type: string
+                  description: ID of the subject to retrieve
+            responses:
+                '200':
+                    description: Successful request. Returns the specified subject.
+                '401':
+                    description: Unauthorized - Token missing
+                '403':
+                    description: Forbidden - Invalid refresh token
+                '404':
+                    description: Subject not found.
+                '500':
+                    description: Server error. Failed to retrieve subject.
+
+        put:
+            summary: Update a subject by ID
+            tags: [Subjects]
+            parameters:
+                - in: path
+                  name: id
+                  required: true
+                  schema:
+                      type: string
+                  description: ID of the subject to update
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/definitions/SubjectInput'
+            responses:
+                '200':
+                    description: Successful request. Returns the updated subject.
+                '400':
+                    description: Client error. Failed to update subject.
+                '401':
+                    description: Unauthorized - Token missing
+                '403':
+                    description: Forbidden - Invalid refresh token
+                '404':
+                    description: Subject not found.
+
+        patch:
+            summary: Partially update a subject by ID
+            tags: [Subjects]
+            parameters:
+                - in: path
+                  name: id
+                  required: true
+                  schema:
+                      type: string
+                  description: ID of the subject to update
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/definitions/SubjectUpdate'
+            responses:
+                '200':
+                    description: Successful request. Returns the updated subject.
+                '400':
+                    description: Client error. Failed to update subject.
+                '401':
+                    description: Unauthorized - Token missing
+                '403':
+                    description: Forbidden - Invalid refresh token
+                '404':
+                    description: Subject not found.
+
+        delete:
+            summary: Delete a subject by ID
+            tags: [Subjects]
+            parameters:
+                - in: path
+                  name: id
+                  required: true
+                  schema:
+                      type: string
+                  description: ID of the subject to delete
+            responses:
+                '200':
+                    description: Successful request. Subject deleted.
+                '401':
+                    description: Unauthorized - Token missing
+                '403':
+                    description: Forbidden - Invalid refresh token
+                '404':
+                    description: Subject not found.
+                '500':
+                    description: Server error. Failed to delete subject.
+    /subjects/current:
+        get:
+            summary: Retrieve subjects taught by the current teacher
+            tags: [Subjects]
+            responses:
+                '200':
+                    description: Successful request. Returns a list of subjects taught by the current teacher.
+                    schema:
+                        type: array
+                        items:
+                            $ref: '#/definitions/Subject'
+                '401':
+                    description: Unauthorized - Token missing
+                '403':
+                    description: Forbidden - Invalid refresh token
+                '500':
+                    description: Server error. Failed to retrieve subjects.
+definitions:
+    SubjectInput:
+        type: object
+        properties:
+            subjectName:
+                type: string
+                description: Name of the subject
+            hourlyRate:
+                $ref: '#/definitions/HourlyRate'
+        required:
+            - subjectName
+            - hourlyRate
+
+    SubjectUpdate:
+        type: object
+        properties:
+            subjectName:
+                type: string
+                description: Updated name of the subject
+            hourlyRate:
+                $ref: '#/definitions/HourlyRate'
+        minProperties: 1
+
+    HourlyRate:
+        type: object
+        properties:
+            lecture:
+                type: number
+                description: Hourly rate for lectures
+            practice:
+                type: number
+                description: Hourly rate for practices
+        required:
+            - lecture
+            - practice

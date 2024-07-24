@@ -1,0 +1,178 @@
+swagger: '2.0'
+info:
+    title: Groups API
+    description: API documentation for managing groups
+    version: 1.0.0
+basePath: /api
+tags:
+    - name: Groups
+      description: Operations related to groups
+securityDefinitions:
+    BearerAuth:
+        type: apiKey
+        name: Authorization
+        in: header
+paths:
+    /groups:
+        get:
+            summary: Retrieve all groups
+            tags: [Groups]
+            security:
+                - BearerAuth: []
+            responses:
+                '200':
+                    description: Successful request. Returns a list of groups.
+                '401':
+                    description: Unauthorized - Token missing
+                '403':
+                    description: Forbidden - Invalid refresh token
+                '500':
+                    description: Server error. Failed to retrieve groups.
+
+        post:
+            summary: Add a group
+            tags: [Groups]
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/definitions/GroupInput'
+            responses:
+                '201':
+                    description: Successful request. Adds a group.
+                '401':
+                    description: Unauthorized - Token missing
+                '403':
+                    description: Forbidden - Invalid refresh token
+                '500':
+                    description: Server error. Failed to add group.
+
+    /groups/{id}:
+        get:
+            summary: Retrieve a group by ID
+            tags: [Groups]
+            parameters:
+                - in: path
+                  name: id
+                  required: true
+                  schema:
+                      type: string
+                  description: ID of the group to retrieve
+            responses:
+                '200':
+                    description: Successful request. Returns the specified group.
+                '401':
+                    description: Unauthorized - Token missing
+                '403':
+                    description: Forbidden - Invalid refresh token
+                '404':
+                    description: Group not found.
+                '500':
+                    description: Server error. Failed to retrieve group.
+
+        put:
+            summary: Update a group by ID
+            tags: [Groups]
+            parameters:
+                - in: path
+                  name: id
+                  required: true
+                  schema:
+                      type: string
+                  description: ID of the group to update
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/definitions/GroupInput'
+            responses:
+                '200':
+                    description: Successful request. Returns the updated group.
+                '401':
+                    description: Unauthorized - Token missing
+                '403':
+                    description: Forbidden - Invalid refresh token
+                '404':
+                    description: Group not found.
+
+        patch:
+            summary: Partially update a group by ID
+            tags: [Groups]
+            parameters:
+                - in: path
+                  name: id
+                  required: true
+                  schema:
+                      type: string
+                  description: ID of the group to update
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/definitions/GroupUpdate'
+            responses:
+                '200':
+                    description: Successful request. Returns the updated group.
+                '401':
+                    description: Unauthorized - Token missing
+                '403':
+                    description: Forbidden - Invalid refresh token
+                '404':
+                    description: Group not found.
+
+        delete:
+            summary: Delete a group by ID
+            tags: [Groups]
+            parameters:
+                - in: path
+                  name: id
+                  required: true
+                  schema:
+                      type: string
+                  description: ID of the group to delete
+            responses:
+                '200':
+                    description: Successful request. Group deleted.
+                '401':
+                    description: Unauthorized - Token missing
+                '403':
+                    description: Forbidden - Invalid refresh token
+                '404':
+                    description: Group not found.
+                '500':
+                    description: Server error. Failed to delete group.
+
+definitions:
+    GroupInput:
+        type: object
+        properties:
+            specialty:
+                type: string
+                description: Specialty of the group
+            department:
+                type: string
+                description: Department of the group
+            studentCount:
+                type: integer
+                description: Number of students in the group
+        required:
+            - specialty
+            - department
+            - studentCount
+
+    GroupUpdate:
+        type: object
+        properties:
+            specialty:
+                type: string
+                description: Updated specialty of the group
+            department:
+                type: string
+                description: Updated department of the group
+            studentCount:
+                type: integer
+                description: Updated number of students in the group
+        minProperties: 1

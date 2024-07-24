@@ -1,0 +1,270 @@
+swagger: '2.0'
+info:
+    version: 1.0.0
+    title: Loads API
+    description: API documentation for managing loads
+basePath: /api
+tags:
+    - name: Loads
+      description: Operations related to loads
+
+paths:
+    /loads:
+        get:
+            summary: Retrieve all loads
+            tags:
+                - Loads
+            parameters:
+                - name: teacher
+                  in: query
+                  description: ID of the teacher to filter loads
+                  required: false
+                  type: string
+
+                - name: subject
+                  in: query
+                  description: ID of the subject to filter loads
+                  required: false
+                  type: string
+                - name: group
+                  in: query
+                  description: ID of the group to filter loads
+                  required: false
+                  type: string
+                - name: lessonType
+                  in: query
+                  description: Type of the lesson to filter loads (e.g., practice or lecture)
+                  required: false
+                  type: string
+            responses:
+                200:
+                    description: Successful request. Returns a list of loads.
+                    schema:
+                        type: array
+                        items:
+                            $ref: '#/definitions/Load'
+                401:
+                    description: Unauthorized - Token missing
+                403:
+                    description: Forbidden - Invalid refresh token
+                500:
+                    description: Server error. Failed to retrieve loads.
+
+        post:
+            summary: Add a load
+            tags:
+                - Loads
+            requestBody:
+                required: true
+                description: Load object that needs to be added
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/definitions/LoadInput'
+            responses:
+                201:
+                    description: Successful request. Adds a load.
+                    schema:
+                        $ref: '#/definitions/Load'
+                400:
+                    description: Bad request. Validation error.
+                401:
+                    description: Unauthorized - Token missing
+                403:
+                    description: Forbidden - Invalid refresh token
+                500:
+                    description: Server error. Failed to add load.
+
+    /loads/{id}:
+        get:
+            summary: Retrieve a load by ID
+            tags:
+                - Loads
+            parameters:
+                - in: path
+                  name: id
+                  required: true
+                  type: string
+                  description: ID of the load to retrieve
+            responses:
+                200:
+                    description: Successful request. Returns the specified load.
+                    schema:
+                        $ref: '#/definitions/Load'
+                401:
+                    description: Unauthorized - Token missing
+                403:
+                    description: Forbidden - Invalid refresh token
+                404:
+                    description: Load not found.
+                500:
+                    description: Server error. Failed to retrieve load.
+
+        put:
+            summary: Update a load by ID
+            tags:
+                - Loads
+            parameters:
+                - in: path
+                  name: id
+                  required: true
+                  type: string
+                  description: ID of the load to update
+            requestBody:
+                required: true
+                description: Updated load object
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/definitions/LoadInput'
+            responses:
+                200:
+                    description: Successful request. Returns the updated load.
+                    schema:
+                        $ref: '#/definitions/Load'
+                400:
+                    description: Client error. Failed to update load.
+                401:
+                    description: Unauthorized - Token missing
+                403:
+                    description: Forbidden - Invalid refresh token
+                404:
+                    description: Load not found.
+
+        patch:
+            summary: Partially update a load by ID
+            tags:
+                - Loads
+            parameters:
+                - in: path
+                  name: id
+                  required: true
+                  type: string
+                  description: ID of the load to update
+            requestBody:
+                required: true
+                description: Fields to update
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/definitions/LoadInput'
+            responses:
+                200:
+                    description: Successful request. Returns the updated load.
+                    schema:
+                        $ref: '#/definitions/Load'
+                400:
+                    description: Client error. Failed to update load.
+                401:
+                    description: Unauthorized - Token missing
+                403:
+                    description: Forbidden - Invalid refresh token
+                404:
+                    description: Load not found.
+        delete:
+            summary: Delete a load by ID
+            tags:
+                - Loads
+            parameters:
+                - in: path
+                  name: id
+                  required: true
+                  type: string
+                  description: ID of the load to delete
+            responses:
+                200:
+                    description: Successful request. Load deleted.
+                401:
+                    description: Unauthorized - Token missing
+                403:
+                    description: Forbidden - Invalid refresh token
+                404:
+                    description: Load not found.
+                500:
+                    description: Server error. Failed to delete load.
+    /loads/current:
+        get:
+            summary: Retrieve all loads for current teacher
+            tags:
+                - Loads
+            description: Retrieve all loads associated with the teacher identified by the user ID from the request context.
+            responses:
+                200:
+                    description: Successful request. Returns a list of loads for the teacher.
+                    schema:
+                        type: array
+                        items:
+                            $ref: '#/definitions/Load'
+                401:
+                    description: Unauthorized - Token missing or invalid
+                403:
+                    description: Forbidden - Invalid refresh token
+                500:
+                    description: Server error. Failed to retrieve loads.
+definitions:
+    LoadInput:
+        type: object
+        properties:
+            teacher:
+                type: string
+                description: Teacher's ID
+            group:
+                type: string
+                description: Group's ID
+            subject:
+                type: string
+                description: Subject's ID
+            lessonType:
+                type: string
+                enum: [practice, lecture]
+                description: Type of lesson
+            hours:
+                type: number
+                description: Number of hours
+        required:
+            - teacher
+            - group
+            - subject
+            - lessonType
+            - hours
+
+    Load:
+        allOf:
+            - $ref: '#/definitions/LoadInput'
+            - type: object
+              properties:
+                  _id:
+                      type: string
+                      description: Load ID
+                  teacher:
+                      type: object
+                      properties:
+                          _id:
+                              type: string
+                              description: Teacher ID
+                  group:
+                      type: object
+                      properties:
+                          _id:
+                              type: string
+                              description: Group ID
+                  subject:
+                      type: object
+                      properties:
+                          _id:
+                              type: string
+                              description: Subject ID
+                  lessonType:
+                      type: string
+                      enum: [practice, lecture]
+                      description: Type of lesson
+                  hours:
+                      type: number
+                      description: Number of hours
+        required:
+            - _id
+            - teacher
+            - group
+            - subject
+            - lessonType
+            - hours
