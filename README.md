@@ -36,7 +36,6 @@ Before you start, ensure you have the following installed:
 
 - Node.js
 - npm or yarn
-- MongoDB
 
 ## Setup
 
@@ -82,7 +81,7 @@ Before you start, ensure you have the following installed:
     ```bash
     npm install
     ```
-4. **Seed the database**:
+4. **Seed the database**
 
     ```bash
     npm run seed
