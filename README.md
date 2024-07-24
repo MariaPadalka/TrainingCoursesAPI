@@ -82,14 +82,33 @@ Before you start, ensure you have the following installed:
     ```bash
     npm install
     ```
+4. **Seed the database**:
 
-## Scripts
-
-- **Start the server**: 
+    ```bash
+    npm run seed
+    ```
+    After successfully seaded data you may use these credentials to login:
+    - teacher
+    ```bash
+    {
+      "email": "teacher1@gmail.com",
+      "password": "teacherPass123"
+    }
+    ```
+    - admin
+    ```bash
+    {
+      "email": "admin1@gmail.com",
+      "password": "adminPass123"
+    }
+    ```
+5. **Start the server**: 
 
     ```bash
     npm start
     ```
+
+## Other Scripts
 
 - **Start the server in development mode**:
 
@@ -119,12 +138,6 @@ Before you start, ensure you have the following installed:
 
     ```bash
     npm run prettier:check
-    ```
-
-- **Seed the database**:
-
-    ```bash
-    npm run seed
     ```
 
 ## Contributing
