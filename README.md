@@ -17,7 +17,7 @@ TrainingCoursesAPI is a REST API designed to manage course-related data, includi
 - **eslint**: A tool for identifying and fixing problems in JavaScript code.
 - **jsonwebtoken**: A library for JSON Web Tokens (JWT) for secure authentication.
 - **nodemailer**: A module for sending emails (after user creation it is used to send generated password).
-- 
+  
   <img src="https://github.com/user-attachments/assets/b16b64fe-741c-4384-91f1-d5b507de8f7c" alt="image" width="400"/>
 
 - **winston**: One of the best and most widely used Node.js logging modules.
