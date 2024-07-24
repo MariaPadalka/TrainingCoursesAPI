@@ -18,6 +18,8 @@ class MailService {
     }
 
     async sendPasswordMail(to, password) {
+        const clientUrl = `http://${process.env.CLIENT_URL}:${process.env.CLIENT_PORT}`;
+
         await this.transporter.sendMail({
             from: process.env.SMTP_USER,
             to: to,
@@ -29,6 +31,7 @@ class MailService {
                     <p><strong>Email:</strong> ${to}</p>
                     <p><strong>Password:</strong> ${password}</p>
                     <p>Please, change your password after the first login.</p>
+                    <p>To login, go to <a href=${clientUrl}/login>login page<a/></p>
                 </div>
             `,
         });
