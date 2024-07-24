@@ -16,11 +16,16 @@ TrainingCoursesAPI is a REST API designed to manage course-related data, includi
 - **prettier**: An opinionated code formatter.
 - **eslint**: A tool for identifying and fixing problems in JavaScript code.
 - **jsonwebtoken**: A library for JSON Web Tokens (JWT) for secure authentication.
-- **nodemailer**: A module for sending emails.
+- **nodemailer**: A module for sending emails (after user creation it is used to send generated password).
+- **winston**: One of the best and most widely used Node.js logging modules.
 
 ## Documentation
 
 The API documentation is maintained using Swagger. It provides details on available endpoints, request and response formats, and usage examples.
+
+
+https://github.com/user-attachments/assets/1da0c350-3b07-4801-9eef-7d8b4250f89d
+
 
 ## Prerequisites
 
@@ -35,8 +40,8 @@ Before you start, ensure you have the following installed:
 1. **Clone the repository**
 
     ```bash
-    git clone https://github.com/your-username/course-management-api.git
-    cd course-management-api
+    git clone https://github.com/MariaPadalka/TrainingCoursesAPI.git
+    cd TrainingCoursesAPI
     ```
 
 2. **Rename and configure the environment file**
